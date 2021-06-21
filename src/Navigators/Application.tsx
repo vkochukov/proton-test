@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
-import { MainContainer, StartupContainer } from '@/Containers'
+import { SafeAreaView, StyleSheet } from 'react-native'
 import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { MainContainer, StartupContainer } from '@/Containers'
 import { navigationRef } from '@/Navigators/Root'
-import { SafeAreaView } from 'react-native'
 import { startupLoadingSelector } from '@/Selectors'
 
 const Stack = createStackNavigator()
@@ -14,7 +14,6 @@ export enum EScreens {
   'Main' = 'Main',
 }
 
-// @refresh reset
 const ApplicationNavigator = React.memo(() => {
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
   const applicationIsLoading = useSelector(startupLoadingSelector)
@@ -34,7 +33,7 @@ const ApplicationNavigator = React.memo(() => {
   )
 
   return (
-    <SafeAreaView style={{ height: '100%', width: '100%' }}>
+    <SafeAreaView style={styles.container}>
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator headerMode={'none'}>
           <Stack.Screen name={EScreens.Startup} component={StartupContainer} />
@@ -51,6 +50,13 @@ const ApplicationNavigator = React.memo(() => {
       </NavigationContainer>
     </SafeAreaView>
   )
+})
+
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+    width: '100%',
+  },
 })
 
 export default ApplicationNavigator

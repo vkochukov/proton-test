@@ -2,8 +2,12 @@ import React, { useEffect } from 'react'
 import { ActivityIndicator, View, Text } from 'react-native'
 import { useDispatch } from 'react-redux'
 import InitStartup from '@/Store/Startup/Init'
+import { Colors } from '@/Theme/Variables'
 
-const StartupContainer = () => {
+// Styles
+import { styles } from './StartupStyles'
+
+const StartupContainer: React.FC = React.memo(() => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -11,12 +15,15 @@ const StartupContainer = () => {
   }, [dispatch])
 
   return (
-    <View style={{ width: '100%', height: 200, backgroundColor: 'red' }}>
-      <ActivityIndicator />
-      <Text>123213</Text>
-      <Text>welcome</Text>
+    <View style={styles.container}>
+      <ActivityIndicator
+        style={styles.preloader}
+        size="large"
+        color={Colors.primary}
+      />
+      <Text style={styles.text}>Loading...</Text>
     </View>
   )
-}
+})
 
 export default StartupContainer

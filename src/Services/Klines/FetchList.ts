@@ -24,11 +24,12 @@ const prepareKlinesData = (data: []) =>
 
 export default async (params: IFetchKlinesParams) => {
   const { symbol, interval } = params
+
   if (!symbol || !interval) {
     return handleError({ message: 'Currency and interval are required' })
   }
 
-  const response = await api.get(`v3/klines`, {
+  const response = await api.get('v3/klines', {
     params: {
       symbol,
       interval,

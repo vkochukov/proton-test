@@ -5,7 +5,7 @@ import {
 } from '@thecodingmachine/redux-toolkit-wrapper'
 import fetchKlinesService from '@/Services/Klines/FetchList'
 
-interface IKlinesItem {
+export interface IKlinesItem {
   openTime: number
   open: string
   high: string

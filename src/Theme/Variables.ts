@@ -11,6 +11,7 @@ import {
   ThemeMetricsSizes,
   ThemeNavigationColors,
 } from '@/Theme/theme.type'
+import { Dimensions } from 'react-native'
 
 /**
  * Colors
@@ -18,10 +19,13 @@ import {
 export const Colors: ThemeColors = {
   transparent: 'rgba(0,0,0,0)',
   white: '#ffffff',
-  text: '#212529',
-  primary: '#E14032',
-  chartLine: '#28a745',
-  error: '#dc3545',
+  text: '#14141D',
+  grey: '#8D8D92',
+  lightGrey: '#E1E2E3',
+  primary: '#63C672',
+  secondary: '#FF4444',
+  label: '#7B97ED',
+  labelContainer: '#DDE4F9',
 }
 
 export const NavigationColors: Partial<ThemeNavigationColors> = {
@@ -44,6 +48,8 @@ const tiny = 5 // 10
 const small = tiny * 2 // 10
 const regular = tiny * 3 // 15
 const large = regular * 2 // 30
+
+export const windowWidth = Dimensions.get('window').width
 
 export const MetricsSizes: ThemeMetricsSizes = {
   tiny,
