@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChartMarkerLabel } from './ChartLabels';
 import ChartContext from '../../helpers/ChartContext';
@@ -12,22 +13,9 @@ function ChartDot({ style, size = 10, ...props }) {
       <Animated.View
         {...props}
         pointerEvents="none"
-        style={[
-          highlightStyle,
-          {
-            width: 1,
-            height: '65%',
-            borderWidth: 0.6,
-            borderRadius: 1,
-            borderColor: '#BFBFBF',
-            borderStyle: 'dashed',
-            top: '15%',
-            position: 'absolute',
-          },
-        ]}
+        style={[highlightStyle, styles.highlight]}
       >
         <ChartMarkerLabel
-          // format={formatDateTime}
           style={{
             top: -size * 3,
             left: -size * 2,
@@ -55,5 +43,17 @@ function ChartDot({ style, size = 10, ...props }) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  highlight: {
+    height: '65%',
+    borderWidth: 0.6,
+    borderRadius: 1,
+    borderColor: '#BFBFBF',
+    borderStyle: 'dashed',
+    top: '15%',
+    position: 'absolute',
+  },
+});
 
 export default withReanimatedFallback(ChartDot);

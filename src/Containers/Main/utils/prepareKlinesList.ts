@@ -8,12 +8,16 @@ export interface IPreparedKlines {
 }
 
 const getMarker = (timestamp: number, activeInterval: EKlinesIntervals) => {
+  const time = new Date(timestamp)
+
   switch (activeInterval) {
     case EKlinesIntervals.hours:
     case EKlinesIntervals.day:
-      return new Date(timestamp).getUTCDay()
+      return `${
+        time.getMonth() + 1
+      }/${time.getDate()} ${time.getHours()}:${time.getMinutes()}`
     default:
-      return new Date(timestamp).toLocaleTimeString()
+      return `${time.getHours()}:${time.getMinutes()}`
   }
 }
 

@@ -26,7 +26,7 @@ export default async (params: IFetchKlinesParams) => {
   const { symbol, interval } = params
 
   if (!symbol || !interval) {
-    return handleError({ message: 'Currency and interval are required' })
+    return handleError({ message: 'Symbol and interval are required' })
   }
 
   const response = await api.get('v3/klines', {

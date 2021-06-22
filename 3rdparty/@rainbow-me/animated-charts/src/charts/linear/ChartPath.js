@@ -131,7 +131,6 @@ function getValue(data, i, smoothingStrategy) {
     }
 
     const p0 = data.value[i - 2] || data.value[i - 1] || data.value[i];
-
     const x0 = p0.x;
     const y0 = p0.y;
     const p1 = data.value[i - 1] || data.value[i];
@@ -458,7 +457,6 @@ export default function ChartPathProvider({
   const dotStyle = useAnimatedStyle(
     () => ({
       opacity: dotScale.value,
-      color: 'red',
       transform: [
         { translateX: positionX.value },
         { translateY: positionY.value + 10 }, // TODO temporary fix for clipped chart
@@ -524,6 +522,8 @@ function ChartPath({
   );
   const selectedStrokeWidthValue = useSharedValue(selectedStrokeWidth);
   const strokeWidthValue = useSharedValue(strokeWidth);
+  const { providedData, originalY } = useContext(ChartContext);
+  const { firstCandleOpenPrice } = providedData;
 
   useEffect(() => {
     layoutSize.value = { height, width };
@@ -630,20 +630,6 @@ function ChartPath({
       .replace('L', 'M');
   });
 
-
-  const { providedData, originalY } = useContext(ChartContext);
-  const { firstCandleOpenPrice } = providedData;
-
-  // const stroke = useDerivedValue(() => {
-  //   const closePrice = parseInt(originalY.value, 10)
-  //   const openPrice = parseInt(firstCandleOpenPrice, 10)
-  //   const deference = ((closePrice - openPrice) / openPrice) * 100 || 0;
-
-  //   return deference < 0 ? 'rgb(245, 85, 95)' : 'rgb(100, 198, 114)'
-
-
-  // }, [providedData]);
-
   const animatedProps = useAnimatedStyle(() => {
     const closePrice = parseInt(originalY.value, 10)
     const openPrice = parseInt(firstCandleOpenPrice, 10)
@@ -665,7 +651,7 @@ function ChartPath({
       };
     }
     return props;
-  }, [originalY, originalY]);
+  }, [originalY, firstCandleOpenPrice]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

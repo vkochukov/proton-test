@@ -92,27 +92,22 @@ function PriceLabelFactory() {
   };
 }
 
-function ChartPriceLabelFactory(style) {
+function PercentageLabelFactory() {
   return function ChartLabel() {
-    const PriceLabel = PriceLabelFactory();
-    const DecimalLabel = DecimalLabelFactory();
-
-    const { [style]: val = 0, providedData } = useContext(ChartContext);
+    const { originalY, providedData } = useContext(ChartContext);
     const { firstCandleOpenPrice } = providedData;
-
-
     const percentage = useDerivedValue(() => {
-      if (val.value && firstCandleOpenPrice) {
-        const closePrice = parseInt(val.value, 10)
+      if (originalY.value && firstCandleOpenPrice) {
+        const closePrice = parseInt(originalY.value, 10)
         const openPrice = parseInt(firstCandleOpenPrice, 10)
         const deference = ((closePrice - openPrice) / openPrice) * 100;
 
         return `${deference > 0 ? '+' : ''}${deference.toFixed(2).toString()}%`;
       }
-    }, []);
+    }, [originalY, firstCandleOpenPrice]);
 
     const percentageProps = useAnimatedStyle(() => {
-      const closePrice = parseInt(val.value, 10)
+      const closePrice = parseInt(originalY.value, 10)
       const openPrice = parseInt(firstCandleOpenPrice, 10)
       const deference = ((closePrice - openPrice) / openPrice) * 100;
 
@@ -121,7 +116,22 @@ function ChartPriceLabelFactory(style) {
         color: deference > 0 ? 'rgb(100, 198, 114)' : 'rgb(245, 85, 95)',
         text: percentage.value,
       };
-    }, []);
+    }, [originalY, firstCandleOpenPrice]);
+
+    return <AnimatedTextInput
+      style={styles.percentage}
+      animatedProps={percentageProps}
+      defaultValue={percentage}
+      editable={false}
+    />
+  };
+}
+
+function ChartPriceLabelFactory() {
+  return function ChartLabel() {
+    const PriceLabel = PriceLabelFactory();
+    const DecimalLabel = DecimalLabelFactory();
+    const PercentageLabel = PercentageLabelFactory();
 
     return (
       <>
@@ -130,18 +140,12 @@ function ChartPriceLabelFactory(style) {
             <PriceLabel />
             <DecimalLabel />
           </View>
-          <AnimatedTextInput
-            style={styles.percentage}
-            animatedProps={percentageProps}
-            defaultValue={percentage}
-            editable={false}
-          />
+          <PercentageLabel />
         </View>
       </>
     );
   };
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export const ChartPriceLabel = ChartPriceLabelFactory('originalY');
+export const ChartPriceLabel = ChartPriceLabelFactory();
 export const ChartYLabel = ChartLabelFactory('originalY');
 export const ChartXLabel = ChartLabelFactory('originalX');
 export const ChartMarkerLabel = ChartLabelFactory('originalMarker');

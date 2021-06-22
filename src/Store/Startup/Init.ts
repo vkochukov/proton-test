@@ -12,9 +12,6 @@ import { ESymbols } from '@/Types/Symbols'
 export default {
   initialState: buildAsyncState(),
   action: buildAsyncActions('startup/init', async (args, { dispatch }) => {
-    // Timeout to fake waiting some process
-    // Remove it, or keep it if you want display a beautiful splash screen ;)
-    await new Promise(resolve => setTimeout(resolve, 1000))
     await dispatch(
       FetchList.action({
         symbol: ESymbols.BTCUSDT,
