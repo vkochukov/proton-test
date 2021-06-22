@@ -5,9 +5,9 @@ import {
 } from '@thecodingmachine/redux-toolkit-wrapper'
 import FetchList from '@/Store/Klines/FetchList'
 import { navigateAndReset } from '@/Navigators/Root'
-import { EScreens } from '@/Navigators/Application'
 import { EKlinesIntervals } from '@/Types/KlinesIntervals'
 import { ESymbols } from '@/Types/Symbols'
+import { EScreens } from '@/Types/Screens'
 
 export default {
   initialState: buildAsyncState(),

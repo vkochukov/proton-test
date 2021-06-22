@@ -13,9 +13,8 @@ const instance = axios.create({
 
 instance.interceptors.response.use(
   response => response,
-  ({ message, response: { data, status } }) => {
-    return handleError({ message, data, status })
-  },
+  ({ message, response: { data, status } }) =>
+    handleError({ message, data, status }),
 )
 
 export default instance

@@ -5,7 +5,7 @@ import InitStartup from '@/Store/Startup/Init'
 import { Colors } from '@/Theme/Variables'
 
 // Styles
-import { styles } from './StartupStyles'
+import { styles } from './StartupContainerStyles'
 
 const StartupContainer: React.FC = React.memo(() => {
   const dispatch = useDispatch()

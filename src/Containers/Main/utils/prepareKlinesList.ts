@@ -1,11 +1,6 @@
-import { IKlinesItem } from '@/Store/Klines/FetchList'
 import { EKlinesIntervals } from '@/Types/KlinesIntervals'
-
-export interface IPreparedKlines {
-  x: number
-  y: number
-  marker: string | number
-}
+import { IKlinesItem } from '@/Types/KlinesItem'
+import { IPreparedKlines } from '@/Types/PreparedKlines'
 
 const getMarker = (timestamp: number, activeInterval: EKlinesIntervals) => {
   const time = new Date(timestamp)
@@ -21,10 +16,12 @@ const getMarker = (timestamp: number, activeInterval: EKlinesIntervals) => {
   }
 }
 
-export default (list: IKlinesItem[], activeInterval: EKlinesIntervals) => {
-  return list.map((item: IKlinesItem, index: number) => ({
+export default (
+  list: IKlinesItem[],
+  activeInterval: EKlinesIntervals,
+): IPreparedKlines[] =>
+  list.map((item: IKlinesItem, index: number) => ({
     x: index,
     y: parseFloat(item.close),
     marker: getMarker(item.closeTime, activeInterval),
   }))
-}

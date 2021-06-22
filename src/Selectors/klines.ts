@@ -1,4 +1,4 @@
-import { KlinesState } from '@/Store/Klines'
+import { KlinesState } from '@/Types/Redux/Store'
 
 export function klinesLoadingSelector(state: { klines: KlinesState }) {
   return state.klines.fetchList.loading

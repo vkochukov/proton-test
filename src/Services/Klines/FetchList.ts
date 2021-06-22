@@ -1,12 +1,9 @@
 import api from '@/Services'
 import handleError from '@/Services/utils/handleError'
+import { IFetchKlinesParams } from '@/Types/FetchKlinesParams'
+import { IKlinesItem } from '@/Types/KlinesItem'
 
-interface IFetchKlinesParams {
-  symbol: string
-  interval: string
-}
-
-const prepareKlinesData = (data: []) =>
+const prepareKlinesData = (data: []): IKlinesItem[] =>
   data.map(item => ({
     openTime: item[0],
     open: item[1],

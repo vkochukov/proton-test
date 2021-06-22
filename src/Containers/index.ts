@@ -1,2 +1,2 @@
-export { default as MainContainer } from './Main/Index'
-export { default as StartupContainer } from './Startup/Index'
+export { default as MainContainer } from './Main/MainContainer'
+export { default as StartupContainer } from './Startup/StartupContainer'

@@ -14,7 +14,7 @@ import { ESymbols } from '@/Types/Symbols'
 import { EKlinesIntervals } from '@/Types/KlinesIntervals'
 
 // Styles
-import { styles } from './MainStyles'
+import { styles } from './MainContainerStyles'
 
 const klinesIntervalsList = [
   {
@@ -42,7 +42,11 @@ const MainContainer: React.FC = React.memo(() => {
 
   const fetchKlines = useCallback(
     (interval: EKlinesIntervals) => {
-      dispatch(FetchList.action({ symbol: ESymbols.BTCUSDT, interval }))
+      try {
+        dispatch(FetchList.action({ symbol: ESymbols.BTCUSDT, interval }))
+      } catch (e) {
+        console.log(e)
+      }
     },
     [dispatch],
   )
@@ -57,9 +61,10 @@ const MainContainer: React.FC = React.memo(() => {
 
       return (
         <TouchableOpacity
+          key={`button-${key}`}
           style={[styles.buttonWrapper, isActive && styles.filled]}
           onPress={handlePress}
-          disabled={isActive}
+          disabled={isActive || fetchKlinesLoading}
         >
           <Text style={[styles.buttonText, isActive && styles.boldText]}>
             {key}
@@ -67,7 +72,7 @@ const MainContainer: React.FC = React.memo(() => {
         </TouchableOpacity>
       )
     })
-  }, [activeInterval, fetchKlines])
+  }, [activeInterval, fetchKlines, fetchKlinesLoading])
 
   return (
     <View style={styles.container}>

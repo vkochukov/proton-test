@@ -6,13 +6,9 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { MainContainer, StartupContainer } from '@/Containers'
 import { navigationRef } from '@/Navigators/Root'
 import { startupLoadingSelector } from '@/Selectors'
+import { EScreens } from '@/Types/Screens'
 
 const Stack = createStackNavigator()
-
-export enum EScreens {
-  'Startup' = 'Startup',
-  'Main' = 'Main',
-}
 
 const ApplicationNavigator = React.memo(() => {
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
