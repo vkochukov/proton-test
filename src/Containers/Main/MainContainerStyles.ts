@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: 200,
+    backgroundColor: Colors.whiteSmoke,
   },
   buttonText: {
     color: Colors.label,
@@ -16,8 +17,10 @@ export const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   symbol: {
-    marginTop: 30,
+    paddingTop: 30,
     color: Colors.text,
+    fontWeight: 'bold',
+    backgroundColor: Colors.white,
     textAlign: 'center',
     fontSize: 20,
   },

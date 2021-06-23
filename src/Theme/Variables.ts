@@ -18,7 +18,8 @@ import { Dimensions } from 'react-native'
  */
 export const Colors: ThemeColors = {
   transparent: 'rgba(0,0,0,0)',
-  white: '#ffffff',
+  white: 'rgba(255,255,255, 1)',
+  whiteSmoke: 'rgba(250,250,250, 1)',
   text: '#14141D',
   grey: '#8D8D92',
   lightGrey: '#E1E2E3',

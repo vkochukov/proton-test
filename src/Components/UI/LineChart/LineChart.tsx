@@ -1,12 +1,13 @@
 import React from 'react'
 import { View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import {
   ChartDot,
   ChartPath,
   ChartPathProvider,
   ChartPriceLabel,
 } from '@rainbow-me/animated-charts'
-import { windowWidth } from '@/Theme/Variables'
+import { Colors, windowWidth } from '@/Theme/Variables'
 import { IPreparedKlines } from '@/Types/PreparedKlines'
 import { IKlinesItem } from '@/Types/KlinesItem'
 
@@ -20,7 +21,7 @@ interface ILineChartProps {
 
 const LineChart: React.FC<ILineChartProps> = React.memo(
   ({ data, firstCandle }) => (
-    <View>
+    <LinearGradient colors={[Colors.white, Colors.whiteSmoke]}>
       <ChartPathProvider
         data={{
           points: data,
@@ -34,7 +35,7 @@ const LineChart: React.FC<ILineChartProps> = React.memo(
         <ChartPath height={windowWidth / 2} width={windowWidth} />
         <ChartDot style={styles.chartDot} />
       </ChartPathProvider>
-    </View>
+    </LinearGradient>
   ),
 )
 

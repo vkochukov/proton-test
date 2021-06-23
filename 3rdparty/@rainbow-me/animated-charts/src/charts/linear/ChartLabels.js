@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { TextInput, StyleSheet, View } from 'react-native';
+import { TextInput, StyleSheet, View, Platform } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
@@ -33,32 +33,34 @@ function ChartLabelFactory(style) {
 
 function DecimalLabelFactory() {
   return function ChartLabel({ format, ...props }) {
-    const { originalY } = useContext(ChartContext);
+    const { originalY, providedData: { points } } = useContext(ChartContext);
+    const lastCandle = points[points.length - 1];
+
     const decimal = useDerivedValue(() => {
       const decimalRegex = /\d+(\.\d{1,2})?/i
-      const found = originalY.value.toString().match(decimalRegex)
+      const price = originalY.value || lastCandle.y
+      const found = price.toString().match(decimalRegex)
 
       if (found) {
         return found[1]
       }
 
-    }, []);
-    const decimalProps = useAnimatedStyle(() => {
-      return {
-        color: 'grey',
-        text: decimal.value,
-        marginLeft: -7,
-        letterSpacing: 1,
-        includeFontPadding: false,
-      };
-    }, []);
+    }, [originalY, lastCandle]);
+
+    const decimalProps = useAnimatedStyle(() => ({
+      color: 'grey',
+      text: decimal.value,
+      marginLeft: Platform.OS === 'ios' ? -3 : -7,
+      letterSpacing: 1,
+      includeFontPadding: false,
+    }), [decimal]);
 
     return (
       <AnimatedTextInput
         {...props}
         style={styles.fontSize}
         animatedProps={decimalProps}
-        defaultValue={decimal}
+        defaultValue={decimal.value}
         editable={false}
       />
     );
@@ -67,25 +69,27 @@ function DecimalLabelFactory() {
 
 function PriceLabelFactory() {
   return function ChartLabel({ format, ...props }) {
-    const { originalY } = useContext(ChartContext);
-    const price = useDerivedValue(() => {
-      return originalY.value ? `$${originalY.value.split(".")[0]}` : '';
-    }, []);
-    const priceProps = useAnimatedStyle(() => {
-      return {
-        color: 'black',
-        letterSpacing: 1,
-        includeFontPadding: false,
-        text: price.value,
-      };
-    }, []);
+    const { originalY, providedData: { points } } = useContext(ChartContext);
+    const lastCandle = points[points.length - 1];
+    const lastCandlePrice = parseInt(lastCandle.y, 10)
+    const price = useDerivedValue(() => `$${parseInt(originalY.value, 10) || lastCandlePrice}`, [
+      originalY,
+      lastCandlePrice,
+    ]);
+
+    const priceProps = useAnimatedStyle(() => ({
+      color: 'black',
+      letterSpacing: 1,
+      includeFontPadding: false,
+      text: price.value,
+    }), [price]);
 
     return (
       <AnimatedTextInput
         {...props}
         style={styles.fontSize}
         animatedProps={priceProps}
-        defaultValue={price}
+        defaultValue={price.value}
         editable={false}
       />
     );
@@ -94,34 +98,33 @@ function PriceLabelFactory() {
 
 function PercentageLabelFactory() {
   return function ChartLabel() {
-    const { originalY, providedData } = useContext(ChartContext);
-    const { firstCandleOpenPrice } = providedData;
-    const percentage = useDerivedValue(() => {
-      if (originalY.value && firstCandleOpenPrice) {
-        const closePrice = parseInt(originalY.value, 10)
-        const openPrice = parseInt(firstCandleOpenPrice, 10)
-        const deference = ((closePrice - openPrice) / openPrice) * 100;
+    const { originalY, providedData: { firstCandleOpenPrice, points } } = useContext(ChartContext);
+    const lastCandle = points[points.length - 1];
+    const lastCandlePrice = parseInt(lastCandle.y, 10)
 
-        return `${deference > 0 ? '+' : ''}${deference.toFixed(2).toString()}%`;
-      }
-    }, [originalY, firstCandleOpenPrice]);
+    const deference = useDerivedValue(
+      () => {
+        const price = originalY.value || lastCandlePrice
 
-    const percentageProps = useAnimatedStyle(() => {
-      const closePrice = parseInt(originalY.value, 10)
-      const openPrice = parseInt(firstCandleOpenPrice, 10)
-      const deference = ((closePrice - openPrice) / openPrice) * 100;
+        return ((price - firstCandleOpenPrice) / firstCandleOpenPrice) * 100
+      },
+      [originalY, firstCandleOpenPrice, lastCandlePrice],
+    );
 
-      return {
-        marginLeft: -5,
-        color: deference > 0 ? 'rgb(100, 198, 114)' : 'rgb(245, 85, 95)',
-        text: percentage.value,
-      };
-    }, [originalY, firstCandleOpenPrice]);
+    const percentage = useDerivedValue(
+      () => `${deference.value > 0 ? '+' : ''}${deference.value.toFixed(2).toString()}%`,
+      [deference],
+    );
+
+    const percentageProps = useAnimatedStyle(() => ({
+      color: deference.value > 0 ? 'rgb(100, 198, 114)' : 'rgb(245, 85, 95)',
+      text: percentage.value,
+    }), [deference]);
 
     return <AnimatedTextInput
       style={styles.percentage}
       animatedProps={percentageProps}
-      defaultValue={percentage}
+      defaultValue={percentage.value}
       editable={false}
     />
   };
@@ -134,15 +137,11 @@ function ChartPriceLabelFactory() {
     const PercentageLabel = PercentageLabelFactory();
 
     return (
-      <>
-        <View style={styles.container}>
-          <View style={styles.priceWrapper}>
-            <PriceLabel />
-            <DecimalLabel />
-          </View>
-          <PercentageLabel />
-        </View>
-      </>
+      <View style={styles.container}>
+        <PriceLabel />
+        <DecimalLabel />
+        <PercentageLabel />
+      </View>
     );
   };
 }
@@ -155,11 +154,6 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontSize: 15,
-  },
-  priceWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
   },
   fontSize: {
     fontSize: 30,
