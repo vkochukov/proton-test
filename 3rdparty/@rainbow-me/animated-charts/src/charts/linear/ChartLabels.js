@@ -41,9 +41,7 @@ function DecimalLabelFactory() {
       const price = originalY.value || lastCandle.y
       const found = price.toString().match(decimalRegex)
 
-      if (found) {
-        return found[1]
-      }
+      return found && found[1] || '.0'
 
     }, [originalY, lastCandle]);
 
